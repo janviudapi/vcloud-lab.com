@@ -1,0 +1,66 @@
+# Name of the action that will trigger
+name: Terraform
+
+# On push event occur
+on: push
+
+# Environment variable to get more detailed log output
+# Environment variable to controls Terraform's input prompts: true enables prompting, false disables prompting and relies on defaults or automation.
+env:
+  TF_LOG: INFO
+  TF_INPUT: false
+
+# Jobs section  
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest # OS where job will trigger
+
+    #Use the bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest or windows-latest
+    #Setting default bash shell
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Install the preferred version of terraform CLI
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+          terraform_version: 1.9.2 # specify your Terraform version here
+
+    # - name: Login to Azure
+    #   uses: azure/login@v2
+    #   with:
+    #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Initialize a new or existing terraform working directory 
+    - name: Terraform Init
+      id: init
+      run: terraform init
+      env:
+        ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+    # Run terraform fmt for push 
+    - name: Terraform Format
+      id: fmt
+      if: (success() || failure())
+      run: terraform fmt -check      
+
+    # Run terraform plan for push 
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan
+      env:
+        TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
