@@ -33,7 +33,7 @@ jobs:
       with:
         terraform_version: 1.9.2 # specify your Terraform version here
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-        terraform_wrapper: false
+        #terraform_wrapper: false
 
     # Initialize a new or existing terraform working directory 
     - name: Terraform Init
