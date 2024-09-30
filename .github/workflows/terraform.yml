@@ -33,12 +33,6 @@ jobs:
       with:
           terraform_version: 1.9.2 # specify your Terraform version here
 
-    # Login to Terraform Cloud
-    - name: Login to Terraform Cloud
-      uses: hashicorp/terraform-github-actions@v1.4.0
-      with:
-        api-token: ${{ secrets.TFE_TOKEN }}
-
     # Initialize a new or existing terraform working directory 
     - name: Terraform Init
       id: init
