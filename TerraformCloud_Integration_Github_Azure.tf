@@ -11,7 +11,7 @@ terraform {
 ##################
 
 variable "subscription_id" {
-  type    = string
+  type = string
 }
 
 provider "azurerm" {
