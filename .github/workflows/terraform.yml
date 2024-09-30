@@ -44,8 +44,6 @@ jobs:
         ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        #TFE_TOKEN: ${{ secrets.TF_API_TOKEN }}
-        #cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
     # Run terraform fmt for push 
     - name: Terraform Format

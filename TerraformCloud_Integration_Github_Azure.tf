@@ -12,7 +12,6 @@ terraform {
 
 variable "subscription_id" {
   type    = string
-  default = "9e22fba3-00a9-447c-b954-a26fec38e029"
 }
 
 provider "azurerm" {
