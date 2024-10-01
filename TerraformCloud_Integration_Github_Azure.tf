@@ -10,13 +10,15 @@ terraform {
 
 ##################
 
-variable "subscription_id" {
-  type = string
-}
+# variable "subscription_id" {
+#   type = string
+# }
+
+##################
 
 provider "azurerm" {
   features {}
-  subscription_id = var.subscription_id
+  #subscription_id = var.subscription_id
 }
 
 ##################
