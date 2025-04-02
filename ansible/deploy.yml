@@ -11,17 +11,17 @@
       debug:
         var: result_get_host
 
-    - name: add directory
-      win_file:
-        path: C:\apps
-        state: directory
+    # - name: add directory
+    #   win_file:
+    #     path: C:\apps
+    #     state: directory
 
-    - name: Download the notepad++ installer
-      win_get_url:
-        url: https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.7.8/npp.8.7.8.Installer.x64.exe
-        dest: C:\apps\npp.8.7.8.Installer.x64.exe
-        force: true
+    # - name: Download the notepad++ installer
+    #   win_get_url:
+    #     url: https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.7.8/npp.8.7.8.Installer.x64.exe
+    #     dest: C:\apps\npp.8.7.8.Installer.x64.exe
+    #     force: true
 
     - name: Install notepad++
       ansible.windows.win_command:
-        cmd: C:\apps\npp.8.7.8.Installer.x64.exe /S
+        cmd: Z:\npp.8.7.8.Installer.x64.exe /S
