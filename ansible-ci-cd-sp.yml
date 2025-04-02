@@ -57,7 +57,7 @@ jobs:
         ssh-keyscan -t rsa ${{ secrets.WINDOWS_VM_IP }} >> ~/.ssh/known_hosts
 
     # # Step 5: Configure Ansible Inventory
-    # - name: Configure Ansible Inventory
+    # - name: Configure Ansible Inventory 
     #   run: |
     #     echo "[windows]" > ansible/inventory
     #     echo "${{ env.WIN_VM_HOST }}" >> ansible/inventory
