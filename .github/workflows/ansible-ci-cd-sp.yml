@@ -58,19 +58,22 @@ jobs:
         ssh-keyscan -t rsa ${{ secrets.WIN_VM_HOST }} >> ~/.ssh/known_hosts
         ssh azureadmin@4.246.228.88 "hostname"
 
-    # # Step 5: Configure Ansible Inventory
-    # - name: Configure Ansible Inventory
-    #   run: |
-    #     echo "[windows]" > ansible/inventory
-    #     echo "${{ env.WIN_VM_HOST }}" >> ansible/inventory
-    #     echo "[windows:vars]" >> ansible/inventory
-    #     echo "ansible_user=${{ env.WIN_USER }}" >> ansible/inventory
-    #     echo "ansible_password=${{ env.WIN_PASS }}" >> ansible/inventory
-    #     echo "ansible_connection=winrm" >> ansible/inventory
-    #     echo "ansible_winrm_transport=ntlm" >> ansible/inventory
-    #     echo "ansible_winrm_server_cert_validation=ignore" >> ansible/inventory
+    # Step 5: Configure Ansible Inventory
+    - name: Configure Ansible Inventory
+      run: |
+        echo "[win]" > ansible/inventory
+        echo "vm01 ansible_host=${{ env.WIN_VM_HOST }}" >> ansible/inventory
+        echo "" >> ansible/inventory
+        echo "[win:vars]" >> ansible/inventory
+        echo "ansible_user=${{ env.WIN_USER }}" >> ansible/inventory
+        echo "ansible_password=${{ env.WIN_PASS }}" >> ansible/inventory
+        echo "ansible_connection=ssh" >> ansible/inventory
+        echo "ansible_shell_type=cmd" >> ansible/inventory
+        echo "ansible_ssh_common_args=-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" >> ansible/inventory
+        echo "ansible_ssh_retries=3" >> ansible/inventory
+        echo "ansible_become_method=runas" >> ansible/inventory
 
-    # # Step 6: Run Ansible Playbook to Deploy Deployment Center
-    # - name: Deploy Teamcenter using Ansible
-    #   run: |
-    #     ansible-playbook -i ansible/inventory ansible/deploy.yml
+    # Step 6: Run Ansible Playbook to Deploy Deployment Center
+    - name: Deploy Teamcenter using Ansible
+      run: |
+        ansible-playbook -i ansible/inventory ansible/deploy.yml
