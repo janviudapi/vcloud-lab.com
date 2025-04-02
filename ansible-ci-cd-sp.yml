@@ -1,0 +1,74 @@
+name: CI/CD Pipeline for Teamcenter Deployment Center
+
+on: push
+  # workflow_dispatch:
+  # push:
+  #   branches:
+  #   - dev # Trigger the pipeline on pushes to the main branch
+
+jobs:
+  deployment-center:
+    runs-on: ubuntu-latest # Use the github-hosted runner
+
+    env:
+    ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+    ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+    ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+    ARM_ACCESS_KEY: ${{ secrets.STORAGE_ACCESS_KEY }}
+    WIN_VM_HOST: "4.246.228.88"  # ${{ secrets.WIN_VM_HOST }} # Private IP of the target Windows VM
+    WIN_USER: "azureadmin" # ${{ secrets.WIN_USER }} # Username for the Windows VM
+    WIN_PASS: "Computer@123" # ${{ secrets.WIN_PASS }} # Password for the Windows VM
+  
+    steps:
+    # Step 1: Check out the repository
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Step 2: Log in to Azure using the service principal - OIDC
+    - name: Log in to Azure
+      uses: actions/azure_login@v1
+      with:
+        creds: |
+          {
+            "clientId": "$${{ secrets.ARM_CLIENT_ID}}",
+            "clientSecret": "${{ secrets.ARM_CLIENT_SECRET }}",
+            "tenantId": "${{ secrets.ARM_TENANT_ID  }}",
+            "subscriptionId": "${{ secrets.ARM_SUBSCRIPTION_ID }}"
+          }
+    - name: 'Run az commands'
+      run: |
+        az account show
+        az group list
+
+    # Step 3: Install Ansible and pywinrm
+    - name: Set up Ansible and pywinrm
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ansible python3-pip
+        pip3 install pywinrm
+
+    # Step 4: Configure SSH Key
+    - name: Configure SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        # Add target VM to known_hosts
+        ssh-keyscan -t rsa ${{ secrets.WINDOWS_VM_IP }} >> ~/.ssh/known_hosts
+
+    # # Step 5: Configure Ansible Inventory
+    # - name: Configure Ansible Inventory
+    #   run: |
+    #     echo "[windows]" > ansible/inventory
+    #     echo "${{ env.WIN_VM_HOST }}" >> ansible/inventory
+    #     echo "[windows:vars]" >> ansible/inventory
+    #     echo "ansible_user=${{ env.WIN_USER }}" >> ansible/inventory
+    #     echo "ansible_password=${{ env.WIN_PASS }}" >> ansible/inventory
+    #     echo "ansible_connection=winrm" >> ansible/inventory
+    #     echo "ansible_winrm_transport=ntlm" >> ansible/inventory
+    #     echo "ansible_winrm_server_cert_validation=ignore" >> ansible/inventory
+
+    # # Step 6: Run Ansible Playbook to Deploy Deployment Center
+    # - name: Deploy Teamcenter using Ansible
+    #   run: |
+    #     ansible-playbook -i ansible/inventory ansible/deploy.yml
