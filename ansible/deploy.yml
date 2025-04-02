@@ -22,6 +22,10 @@
     #     dest: C:\apps\npp.8.7.8.Installer.x64.exe
     #     force: true
 
+    - name: Map azure file drive
+      ansible.windows.win_command:
+        cmd: net use Z: "\\\\vcloudlabdemo01scripts.file.core.windows.net\\apps" /user:Azure\\vcloudlabdemo01scripts kC3B9UoaZEPvWKsocOHvndUtl+5NLc8tJOKLkjliPvWoV7VJpa/6YnZJy1NjjWSRvnlWE86a0XW2+ASto99H0A==
+
     - name: Install notepad++
       ansible.windows.win_command:
         cmd: Z:\npp.8.7.8.Installer.x64.exe /S
