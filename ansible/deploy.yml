@@ -35,14 +35,8 @@
 
     - name: Install notepad++
       win_shell: |
-        $connectTestResult = Test-NetConnection -ComputerName vcloudlabdemo01scripts.file.core.windows.net -Port 445
-        if ($connectTestResult.TcpTestSucceeded) {
-            # Save the password so the drive will persist on reboot
-            cmd.exe /C "cmdkey /add:`"vcloudlabdemo01scripts.file.core.windows.net`" /user:`"localhost\vcloudlabdemo01scripts`" /pass:`"kC3B9UoaZEPvWKsocOHvndUtl+5NLc8tJOKLkjliPvWoV7VJpa/6YnZJy1NjjWSRvnlWE86a0XW2+ASto99H0A==`""
-            # Mount the drive
-            New-PSDrive -Name Z -PSProvider FileSystem -Root "\\vcloudlabdemo01scripts.file.core.windows.net\apps" -Persist
-        } else {
-            Write-Error -Message "Unable to reach the Azure storage account via port 445. Check to make sure your organization or ISP is not blocking port 445, or use Azure P2S VPN, Azure S2S VPN, or Express Route to tunnel SMB traffic over a different port."
-        }
+        cmd.exe /C "cmdkey /add:`"vcloudlabdemo01scripts.file.core.windows.net`" /user:`"localhost\vcloudlabdemo01scripts`" /pass:`"kC3B9UoaZEPvWKsocOHvndUtl+5NLc8tJOKLkjliPvWoV7VJpa/6YnZJy1NjjWSRvnlWE86a0XW2+ASto99H0A==`""
+
+        New-PSDrive -Name Z -PSProvider FileSystem -Root "\\vcloudlabdemo01scripts.file.core.windows.net\apps" -Persist
         dir Z:
 #        Z:\npp.8.7.8.Installer.x64.exe /S
