@@ -2,8 +2,8 @@
 - hosts: vm01
   gather_facts: no
   vars:
-    MAPDRIVE_USER: "{{ lookup('env', 'SA_MAPDRIVE_USER') }}"
-    MAPDRIVE_SECRET: "{{ lookup('env', 'SA_MAPDRIVE_SECRET') }}"
+    MAPDRIVE_USER: "{{ MAPDRIVE_USER }}"
+    MAPDRIVE_SECRET: "{{ MAPDRIVE_SECRET }}"
   tasks:
     - name: Debug MAPDRIVE_USER
       debug:
