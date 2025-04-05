@@ -38,6 +38,4 @@
         $secpasswd = ConvertTo-SecureString 'kC3B9UoaZEPvWKsocOHvndUtl+5NLc8tJOKLkjliPvWoV7VJpa/6YnZJy1NjjWSRvnlWE86a0XW2+ASto99H0A==' -AsPlainText -Force
         $mycreds = New-Object System.Management.Automation.PSCredential ('localhost\vcloudlabdemo01scripts', $secpasswd)
         New-PSDrive –Name 'Z' –PSProvider FileSystem –Root '\\vcloudlabdemo01scripts.file.core.windows.net\apps' -Credential $mycreds
-
-        dir Z:
-#        Z:\npp.8.7.8.Installer.x64.exe /S
+        Z:\npp.8.7.8.Installer.x64.exe /S
