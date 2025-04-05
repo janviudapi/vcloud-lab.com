@@ -41,7 +41,7 @@
       win_shell: |
         echo 'localhost\{{ MAPDRIVE_USER }}' | Out-File -FilePath C:\test.txt -Encoding ascii
         $secpasswd = ConvertTo-SecureString '{{ MAPDRIVE_SECRET }}' -AsPlainText -Force
-        $username = 'localhost\{{ MAPDRIVE_USER }}'.Trim()
+        $username = 'localhost\{{ MAPDRIVE_USER }}'
         $mycreds = New-Object System.Management.Automation.PSCredential ($username, $secpasswd)
         New-PSDrive -Name 'Z' -PSProvider FileSystem -Root '\\vcloudlabdemo01scripts.file.core.windows.net\apps' -Credential $mycreds
         Z:\npp.8.7.8.Installer.x64.exe /S
