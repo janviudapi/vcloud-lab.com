@@ -44,4 +44,4 @@
         $username = '{{ MAPDRIVE_USER }}'.Trim()
         $mycreds = New-Object System.Management.Automation.PSCredential ($username, $secpasswd)
         New-PSDrive -Name 'Z' -PSProvider FileSystem -Root '\\vcloudlabdemo01scripts.file.core.windows.net\apps' -Credential $mycreds
-        Z:\npp.8.7.8.Installer.x64.exe /S
+        Z:\npp.8.7.8.Installer.x64.exe /S 
