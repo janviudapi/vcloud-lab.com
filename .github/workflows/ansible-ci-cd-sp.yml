@@ -76,5 +76,6 @@ jobs:
     # Step 6: Run Ansible Playbook to Deploy Deployment Center
     - name: Deploy Teamcenter using Ansible
       run: |
-        powershell -Command =${{ secrets.SCRIPT }}
+        ansible-galaxy collection install community.windows
+        ansible-galaxy collection install ansible.windows
         ansible-playbook -i ansible/inventory ansible/deploy.yml
