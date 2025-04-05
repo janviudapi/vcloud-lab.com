@@ -5,9 +5,9 @@
     MAPDRIVE_USER: "{{ MAPDRIVE_USER }}"
     MAPDRIVE_SECRET: "{{ MAPDRIVE_SECRET }}"
   tasks:
-    - name: Debug MAPDRIVE_USER
+    - name: Debug MAPDRIVE_SECRET
       debug:
-        var: MAPDRIVE_USER
+        var: MAPDRIVE_SECRET
 
     - name: test powershell
       win_shell: |
