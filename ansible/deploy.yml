@@ -35,4 +35,5 @@
 
     - name: Install notepad++
       win_shell: |
-        Z:\npp.8.7.8.Installer.x64.exe /S
+        dir Z:
+#        Z:\npp.8.7.8.Installer.x64.exe /S
