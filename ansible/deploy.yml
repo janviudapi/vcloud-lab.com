@@ -5,9 +5,9 @@
     MAPDRIVE_USER: "{{ MAPDRIVE_USER }}"
     MAPDRIVE_SECRET: "{{ MAPDRIVE_SECRET }}"
   tasks:
-    - name: Debug MAPDRIVE_SECRET
+    - name: SHOW MAPDRIVE_USER
       debug:
-        var: MAPDRIVE_SECRET
+        var: MAPDRIVE_USER
 
     - name: test powershell
       win_shell: |
@@ -29,20 +29,10 @@
     #     dest: C:\apps\npp.8.7.8.Installer.x64.exe
     #     force: true
 
-    - name: Create mapped drive with credentials that do not persist on the next logon
-      community.windows.win_mapped_drive:
-        letter: Z
-        path: \\vcloudlabdemo01scripts.file.core.windows.net\apps
-        state: present
-        username: localhost\vcloudlabdemo01scripts  #"{{ MAPDRIVE_USER }}" #localhost\vcloudlabdemo01scripts #'{{ ansible_user }}'
-        password: kC3B9UoaZEPvWKsocOHvndUtl+5NLc8tJOKLkjliPvWoV7VJpa/6YnZJy1NjjWSRvnlWE86a0XW2+ASto99H0A== #"{{ MAPDRIVE_SECRET }}"
-
     - name: Install notepad++
       win_shell: |
         $secpasswd = ConvertTo-SecureString '{{ MAPDRIVE_SECRET }}' -AsPlainText -Force
         $username = 'localhost\{{ MAPDRIVE_USER }}'
         $mycreds = New-Object System.Management.Automation.PSCredential ($username, $secpasswd)
-        $username | out-file -FilePath C:\Temp\password.txt -Force
-        $mycreds.GetNetworkCredential().Password | out-file -FilePath C:\Temp\password.txt -Force -Append
         New-PSDrive -Name 'Z' -PSProvider FileSystem -Root '\\vcloudlabdemo01scripts.file.core.windows.net\apps' -Credential $mycreds
         Z:\npp.8.7.8.Installer.x64.exe /S
