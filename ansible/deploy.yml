@@ -36,3 +36,15 @@
     - name: Install notepad++
       ansible.windows.win_command:
         cmd: Z:\npp.8.7.8.Installer.x64.exe /S
+
+    # - name: Create mapped drive with credentials that do not persist on the next logon
+    #   community.windows.win_mapped_drive:
+    #     letter: Z
+    #     path: \\vcloudlabdemo01scripts.file.core.windows.net\apps
+    #     state: present
+    #     username: localhost\vcloudlabdemo01scripts #'{{ ansible_user }}'
+    #     password: kC3B9UoaZEPvWKsocOHvndUtl+5NLc8tJOKLkjliPvWoV7VJpa/6YnZJy1NjjWSRvnlWE86a0XW2+ASto99H0A== #'{{ ansible_password }}'
+
+    # - name: Install notepad++
+    #   ansible.windows.win_command:
+    #     cmd: Z:\npp.8.7.8.Installer.x64.exe /S        

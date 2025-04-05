@@ -79,4 +79,4 @@ jobs:
       run: |
         ansible-galaxy collection install community.windows
         ansible-galaxy collection install ansible.windows
-        ansible-playbook -i ansible/inventory ansible/deploy.yml --extra-vars "SA_MAPDRIVE_USER=${{ secrets.MAPDRIVE_USER }} SA_MAPDRIVE_SECRET=${{ secrets.MAPDRIVE_SECRET }}"
+        ansible-playbook -i ansible/inventory ansible/deploy.yml
