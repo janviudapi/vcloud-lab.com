@@ -34,7 +34,5 @@
         password: kC3B9UoaZEPvWKsocOHvndUtl+5NLc8tJOKLkjliPvWoV7VJpa/6YnZJy1NjjWSRvnlWE86a0XW2+ASto99H0A== #"{{ MAPDRIVE_SECRET }}"
 
     - name: Install notepad++
-      ansible.windows.win_command:
-        win_shell: |
-          dir Z:
-          Z:\npp.8.7.8.Installer.x64.exe /S
+      win_shell: |
+        Z:\npp.8.7.8.Installer.x64.exe /S
