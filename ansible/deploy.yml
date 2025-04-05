@@ -5,6 +5,10 @@
     MAPDRIVE_USER: "{{ lookup('env', 'SA_MAPDRIVE_USER') }}"
     MAPDRIVE_SECRET: "{{ lookup('env', 'SA_MAPDRIVE_SECRET') }}"
   tasks:
+    - name: Debug MAPDRIVE_USER
+      debug:
+        var: MAPDRIVE_USER
+
     - name: test powershell
       win_shell: |
         get-host
@@ -35,7 +39,7 @@
 
     - name: Install notepad++
       win_shell: |
-        $secpasswd = ConvertTo-SecureString '{{ MAPDRIVE_USER }}' -AsPlainText -Force
+        $secpasswd = ConvertTo-SecureString '{{ MAPDRIVE_SECRET }}' -AsPlainText -Force
         $mycreds = New-Object System.Management.Automation.PSCredential ('{{ MAPDRIVE_USER }}', $secpasswd)
         New-PSDrive –Name 'Z' –PSProvider FileSystem –Root '\\vcloudlabdemo01scripts.file.core.windows.net\apps' -Credential $mycreds
         Z:\npp.8.7.8.Installer.x64.exe /S
