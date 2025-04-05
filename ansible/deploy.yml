@@ -1,6 +1,9 @@
 ---
 - hosts: vm01
   gather_facts: no
+  vars:
+    MAPDRIVE_USER: "{{ lookup('env', 'SA_MAPDRIVE_USER') }}"
+    MAPDRIVE_SECRET: "{{ lookup('env', 'SA_MAPDRIVE_SECRET') }}"
   tasks:
     - name: test powershell
       win_shell: |
@@ -27,11 +30,9 @@
         letter: Z
         path: \\vcloudlabdemo01scripts.file.core.windows.net\apps
         state: present
-        username: localhost\vcloudlabdemo01scripts #'{{ ansible_user }}'
-        password: kC3B9UoaZEPvWKsocOHvndUtl+5NLc8tJOKLkjliPvWoV7VJpa/6YnZJy1NjjWSRvnlWE86a0XW2+ASto99H0A== #'{{ ansible_password }}'
+        username: "{{ MAPDRIVE_USER }}" #localhost\vcloudlabdemo01scripts #'{{ ansible_user }}'
+        password: "{{ MAPDRIVE_SECRET }}"
 
     - name: Install notepad++
       ansible.windows.win_command:
         cmd: Z:\npp.8.7.8.Installer.x64.exe /S
-
-

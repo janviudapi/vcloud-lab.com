@@ -58,6 +58,7 @@ jobs:
         ssh-keyscan -t rsa ${{ secrets.WIN_VM_HOST }} >> ~/.ssh/known_hosts
         ssh azureadmin@4.246.228.88 "hostname"
 
+
     # Step 5: Configure Ansible Inventory
     - name: Configure Ansible Inventory
       run: |
@@ -78,4 +79,4 @@ jobs:
       run: |
         ansible-galaxy collection install community.windows
         ansible-galaxy collection install ansible.windows
-        ansible-playbook -i ansible/inventory ansible/deploy.yml
+        ansible-playbook -i ansible/inventory ansible/deploy.yml --extra-vars "SA_MAPDRIVE_USER=${{ secrets.MAPDRIVE_USER }} SA_MAPDRIVE_SECRET=${{ secrets.MAPDRIVE_SECRET }}"
