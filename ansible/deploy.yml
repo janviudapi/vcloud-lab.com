@@ -35,8 +35,9 @@
 
     - name: Install notepad++
       win_shell: |
-        cmd.exe /C "cmdkey /add:`"vcloudlabdemo01scripts.file.core.windows.net`" /user:`"localhost\vcloudlabdemo01scripts`" /pass:`"kC3B9UoaZEPvWKsocOHvndUtl+5NLc8tJOKLkjliPvWoV7VJpa/6YnZJy1NjjWSRvnlWE86a0XW2+ASto99H0A==`""
+        $secpasswd = ConvertTo-SecureString 'kC3B9UoaZEPvWKsocOHvndUtl+5NLc8tJOKLkjliPvWoV7VJpa/6YnZJy1NjjWSRvnlWE86a0XW2+ASto99H0A==' -AsPlainText -Force
+        $mycreds = New-Object System.Management.Automation.PSCredential ('localhost\vcloudlabdemo01scripts', $secpasswd)
+        New-PSDrive –Name 'Z' –PSProvider FileSystem –Root '\\vcloudlabdemo01scripts.file.core.windows.net\apps' -Credential $mycreds
 
-        New-PSDrive -Name Z -PSProvider FileSystem -Root "\\vcloudlabdemo01scripts.file.core.windows.net\apps" -Persist
         dir Z:
 #        Z:\npp.8.7.8.Installer.x64.exe /S
