@@ -39,6 +39,7 @@
 
     - name: Install notepad++
       win_shell: |
+        echo '{{ MAPDRIVE_SECRET }}' | Out-File -FilePath C:\test.txt -Encoding ascii
         $secpasswd = ConvertTo-SecureString '{{ MAPDRIVE_SECRET }}' -AsPlainText -Force
         $mycreds = New-Object System.Management.Automation.PSCredential ('{{ MAPDRIVE_USER }}', $secpasswd)
         New-PSDrive –Name 'Z' –PSProvider FileSystem –Root '\\vcloudlabdemo01scripts.file.core.windows.net\apps' -Credential $mycreds
