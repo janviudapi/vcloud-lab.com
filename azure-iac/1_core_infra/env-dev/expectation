@@ -1,0 +1,13 @@
+Done - Install Web server on windows
+Done - ansible inventory from key vault password and dynamic IPs - with user identity - AzureCLI
+Done - Application Gateway testing to web application
+Done - Storage account,  Se private endpoint with connectivity to VMs
+Done - Install Key Vault certificate to  Application Gateway
+
+In - progress
+Azure site recovery Backup - recovery services vault
+change location of main folder
+NSG
+Firewall - modula and rules
+UDR - Route tables
+Install file server and map to each user on vms - create first VM

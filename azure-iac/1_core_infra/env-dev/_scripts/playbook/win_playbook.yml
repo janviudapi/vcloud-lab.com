@@ -1,0 +1,96 @@
+---
+- name: Ping Windows Host
+  hosts: all
+  gather_facts: no
+
+  vars:
+    drive_letter: "Y:"
+    drive_path: "\\vcloudlabfileshare01.file.core.windows.net\\test"
+    storage_account_name: "localhost\\vcloudlabfileshare01"
+  
+  tasks:
+    #################### On localhost ########################
+
+    - name: connect AzPowerShell to Azure
+      shell: |
+        az login --identity
+      args:
+        executable: /usr/bin/bash
+      delegate_to: localhost
+
+    - name: Run a pwsh command
+      shell: az keyvault secret show --vault-name vcloudlab001 --name vmpassword --query value -o tsv
+      #az keyvault secret show --name "{{ vaultSecretName }}" --vault-name "{{ vaultName }}" --query value -o tsv
+      args:
+        executable: /usr/bin/bash
+      register: keyvaultsecret_result
+      delegate_to: localhost
+
+    - name: Run a pwsh command to get storage account secret
+      shell: az storage account keys list --account-name vcloudlabfileshare01 --resource-group spokerg --query "[?keyName=='key1'].value" -o tsv
+      args:
+        executable: /usr/bin/bash
+      register: storageaccountsecretkey1_result
+      delegate_to: localhost
+
+    - name: Extract password into a fact
+      set_fact:
+        ansible_password: "{{ keyvaultsecret_result.stdout | trim }}"
+        storage_account_key: "{{ storageaccountsecretkey1_result.stdout | trim }}"
+      delegate_to: localhost
+
+    #################### On Remote ########################
+
+    - name: Ensure the host is reachable
+      win_ping:
+
+    - name: Copy file
+      win_copy:
+        src: '/tmp/playbook/npp.exe'
+        dest: 'C:\Temp\npp.exe'
+
+    - name: Install notepad++
+      ansible.windows.win_command:
+        cmd: C:\Temp\npp.exe /S #/D=C:\NotepadPlusPlus
+
+    - name: Configure OS settings
+      ansible.windows.win_shell: |
+        function Disable-InternetExplorerESC {
+            $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+            $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+            Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0 -Force
+            Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0 -Force
+            Stop-Process -Name Explorer -Force
+            Write-Host "IE Enhanced Security Configuration (ESC) has been disabled." -ForegroundColor Green
+        }
+        function Enable-InternetExplorerESC {
+            $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+            $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+            Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 1 -Force
+            Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 1 -Force
+            Stop-Process -Name Explorer -Force
+            Write-Host "IE Enhanced Security Configuration (ESC) has been enabled." -ForegroundColor Green
+        }
+        function Disable-UserAccessControl {
+            Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value 00000000 -Force
+            Write-Host "User Access Control (UAC) has been disabled." -ForegroundColor Green    
+        }
+        Disable-UserAccessControl
+        Disable-InternetExplorerESC
+
+        Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+
+    - name: Configure web server on Windows
+      ansible.windows.win_feature:
+        name: "web-server"
+        state: present
+        restart: no
+        include_sub_features: yes
+        include_management_tools: yes
+
+    # - name: Add shared drive mapping to the registry for all users
+    #   win_registry:
+    #     path: "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"
+    #     name: "MapAzSharedDrive"
+    #     value: "net use {{ drive_letter }} {{ drive_path }} /user:{{ storage_account_name }} {{ storage_account_key }} /persistent:yes"
+    #     type: string

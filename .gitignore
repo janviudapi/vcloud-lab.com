@@ -1,0 +1,24 @@
+# Terraform generated files and directories
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*.backup
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*.tfvars
+*.tfvars.json
+
+# Local configuration files
+.terraformrc
+terraform.rc
+
+# Provider-specific files (if applicable, e.g., for local provider binaries)
+# .terraform/providers/
+
+# Editor/OS specific files
+.DS_Store
+.vscode/
+*.swp
+*~

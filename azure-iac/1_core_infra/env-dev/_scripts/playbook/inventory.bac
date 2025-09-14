@@ -1,0 +1,28 @@
+all:
+  hosts:
+    windows_host_1:
+      ansible_host: 10.2.1.4 # Replace with the IP of the first Windows host
+    windows_host_2:
+      ansible_host: 10.2.1.5 # Replace with the IP of the second Windows host
+    # windows_host_3:
+    #   ansible_host: 192.168.1.103 # Replace with the IP of the third Windows host
+
+  vars:
+    ansible_user: azureadmin # Common username for all hosts
+    ansible_password: xxxxxxxxxxx # Common password for all hosts
+    ansible_connection: winrm
+    ansible_winrm_transport: ntlm # Use "credssp" or "basic" if required
+    ansible_port: 5986 # Default WinRM HTTP port; use 5986 for HTTPS
+    ansible_winrm_server_cert_validation: ignore
+
+
+#########################
+
+# [win]
+# 192.9.12.122
+
+# [win:vars]
+# ansible_connection=winrm 
+# ansible_user=administrator 
+# ansible_password=r$eBQNgc5U&A2at8kDwpWo.KzLT5NvHd 
+# ansible_winrm_server_cert_validation=ignore

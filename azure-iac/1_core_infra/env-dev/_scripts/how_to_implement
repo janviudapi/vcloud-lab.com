@@ -1,0 +1,11 @@
+For ansible automation
+
+Keep the windows password in win_playbook
+
+dev user managed identity provide access contributer at subscription level and at key vault to read secrets (
+Key Vault Administrator 
+)
+
+Change storageaccount urls in info.vars
+Change storageaccount urls in installansible.sh
+Change VM IPs in playbook inventory
