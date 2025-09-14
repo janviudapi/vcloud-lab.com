@@ -8,7 +8,7 @@ on:
 
 env:
   #  TF_VERSION: "1.6.0"  #  Terraform version
-  WORKING_DIR: "./azure-iac" #"./teamcenter-azure-iac/environments/prod_001"
+  WORKING_DIR: "azure-iac" #"./teamcenter-azure-iac/environments/prod_001"
 
 permissions:
   id-token: write
