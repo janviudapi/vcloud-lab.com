@@ -104,10 +104,10 @@ module "windows_virtual_machine" {
     version   = each.value.source_image_reference.version   #"latest"
   }
 
-  ext_settings = {
-    fileUris         = each.value.ext_settings.fileUris
-    commandToExecute = each.value.ext_settings.commandToExecute
-  }
+  # ext_settings = {
+  #   fileUris         = each.value.ext_settings.fileUris
+  #   commandToExecute = each.value.ext_settings.commandToExecute
+  # }
 
   data_disks = var.data_disks
   tags       = each.value.tags

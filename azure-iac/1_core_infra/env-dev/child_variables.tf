@@ -104,10 +104,10 @@ variable "windows_virtual_machine_info" {
       sku       = string
       version   = string
     })
-    ext_settings = object({
-      fileUris         = list(string)
-      commandToExecute = string
-    })
+    # ext_settings = object({
+    #   fileUris         = list(string)
+    #   commandToExecute = string
+    # })
     tags = map(string)
   }))
 }

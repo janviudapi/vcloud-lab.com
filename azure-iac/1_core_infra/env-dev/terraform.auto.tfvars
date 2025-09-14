@@ -467,12 +467,12 @@ windows_virtual_machine_info = [
       sku       = "2019-Datacenter"
       version   = "latest"
     }
-    ext_settings = {
-      fileUris = [
-        "https://sadevspoke001.blob.core.windows.net/scripts/ConfigureRemotingForAnsible.ps1"
-      ]
-      commandToExecute = "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
-    }
+    # ext_settings = {
+    #   fileUris = [
+    #     "https://sadevspoke001.blob.core.windows.net/scripts/ConfigureRemotingForAnsible.ps1"
+    #   ]
+    #   commandToExecute = "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
+    # }
     tags = {
       environment = "dev"
       project     = "demo-001"
@@ -502,12 +502,12 @@ windows_virtual_machine_info = [
       sku       = "2019-Datacenter"
       version   = "latest"
     }
-    ext_settings = {
-      fileUris = [
-        "https://sadevspoke001.blob.core.windows.net/scripts/ConfigureRemotingForAnsible.ps1"
-      ]
-      commandToExecute = "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
-    }
+    # ext_settings = {
+    #   fileUris = [
+    #     "https://sadevspoke001.blob.core.windows.net/scripts/ConfigureRemotingForAnsible.ps1"
+    #   ]
+    #   commandToExecute = "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
+    # }
     tags = {
       environment = "dev"
       project     = "demo-001"
@@ -537,12 +537,12 @@ windows_virtual_machine_info = [
       sku       = "2019-Datacenter"
       version   = "latest"
     }
-    ext_settings = {
-      fileUris = [
-        "https://sadevspoke001.blob.core.windows.net/scripts/ConfigureRemotingForAnsible.ps1"
-      ]
-      commandToExecute = "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
-    }
+    # ext_settings = {
+    #   fileUris = [
+    #     "https://sadevspoke001.blob.core.windows.net/scripts/ConfigureRemotingForAnsible.ps1"
+    #   ]
+    #   commandToExecute = "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
+    # }
     tags = {
       environment = "dev"
       project     = "demo-001"

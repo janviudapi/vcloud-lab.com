@@ -43,21 +43,21 @@ variable "admin_username" {
 #   type        = string
 # }
 
-variable "ext_settings" {
-  description = "File URIs for the virtual machine extension"
-  type = object({
-    fileUris         = list(string)
-    commandToExecute = string
-  })
-  default = {
-    fileUris = [
-      "https://sadevspoke001.blob.core.windows.net/scripts/ConfigureRemotingForAnsible.ps1"
-    ]
-    commandToExecute = "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
-  }
-  #"https://sadevspoke001.blob.core.windows.net/scripts/ConfigureRemotingForAnsible.ps1"
-  # "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
-}
+# variable "ext_settings" {
+#   description = "File URIs for the virtual machine extension"
+#   type = object({
+#     fileUris         = list(string)
+#     commandToExecute = string
+#   })
+#   default = {
+#     fileUris = [
+#       "https://sadevspoke001.blob.core.windows.net/scripts/ConfigureRemotingForAnsible.ps1"
+#     ]
+#     commandToExecute = "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
+#   }
+#   #"https://sadevspoke001.blob.core.windows.net/scripts/ConfigureRemotingForAnsible.ps1"
+#   # "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
+# }
 
 variable "key_vault_info" {
   description = "Information about the key vault"

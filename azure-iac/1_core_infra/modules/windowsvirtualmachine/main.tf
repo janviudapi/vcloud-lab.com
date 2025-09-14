@@ -58,66 +58,66 @@ resource "azurerm_windows_virtual_machine" "windowsvirtualmachine" {
   tags = var.tags
 }
 
-resource "azurerm_virtual_machine_extension" "virtualmachineextension" {
-  name                 = "${var.name}-vmext"
-  virtual_machine_id   = azurerm_windows_virtual_machine.windowsvirtualmachine.id
-  publisher            = "Microsoft.Compute"
-  type                 = "CustomScriptExtension"
-  type_handler_version = "1.10"
+# resource "azurerm_virtual_machine_extension" "virtualmachineextension" {
+#   name                 = "${var.name}-vmext"
+#   virtual_machine_id   = azurerm_windows_virtual_machine.windowsvirtualmachine.id
+#   publisher            = "Microsoft.Compute"
+#   type                 = "CustomScriptExtension"
+#   type_handler_version = "1.10"
 
-  depends_on = [azurerm_virtual_machine_data_disk_attachment.data_disk_attach]
+#   depends_on = [azurerm_virtual_machine_data_disk_attachment.data_disk_attach]
 
-  settings = jsonencode({
-    "fileUris" : var.ext_settings.fileUris,
-    "commandToExecute" : var.ext_settings.commandToExecute
-  })
+#   settings = jsonencode({
+#     "fileUris" : var.ext_settings.fileUris,
+#     "commandToExecute" : var.ext_settings.commandToExecute
+#   })
 
-  # # # # # # # # example - working - 0 -2 - start
-  # settings = jsonencode({
-  #   "fileUris" : var.ext_settings.fileUris,
-  #   "commandToExecute" : var.ext_settings.commandToExecute
-  # })
-  # # # # # # # # example - 0 -2 - end
+#   # # # # # # # # example - working - 0 -2 - start
+#   # settings = jsonencode({
+#   #   "fileUris" : var.ext_settings.fileUris,
+#   #   "commandToExecute" : var.ext_settings.commandToExecute
+#   # })
+#   # # # # # # # # example - 0 -2 - end
 
-  # # # # # # # # example - 0 -1 - start
-  #  settings = jsonencode({
-  #     script = file("_scripts/ConfigureRemotingForAnsible.ps1")
-  #     #commandtoexecute = "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
-  #   })
-  # # # # # # # # example - 0 -1 - end
+#   # # # # # # # # example - 0 -1 - start
+#   #  settings = jsonencode({
+#   #     script = file("_scripts/ConfigureRemotingForAnsible.ps1")
+#   #     #commandtoexecute = "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
+#   #   })
+#   # # # # # # # # example - 0 -1 - end
 
-  # # # # # # # # example - 0 0 - start
-  # settings = <<SETTINGS
-  # {
-  #   "fileUris": ["https://sadevspoke001.blob.core.windows.net/scripts/ConfigureRemotingForAnsible.ps1"],
-  #   "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
-  # }
-  # SETTINGS
-  # # # # # # # # example - 0 0 - end
+#   # # # # # # # # example - 0 0 - start
+#   # settings = <<SETTINGS
+#   # {
+#   #   "fileUris": ["https://sadevspoke001.blob.core.windows.net/scripts/ConfigureRemotingForAnsible.ps1"],
+#   #   "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
+#   # }
+#   # SETTINGS
+#   # # # # # # # # example - 0 0 - end
 
-  # # # # # # # # example - 0 1 - start
-  # settings = <<SETTINGS
-  #   {
-  #       "script": "${file("${path.module}/script.ps1")}"
-  #   }
-  # SETTINGS
-  # # # # # # # # example - 0 1 - end
+#   # # # # # # # # example - 0 1 - start
+#   # settings = <<SETTINGS
+#   #   {
+#   #       "script": "${file("${path.module}/script.ps1")}"
+#   #   }
+#   # SETTINGS
+#   # # # # # # # # example - 0 1 - end
 
-  # # # # # # # # example - 0 2 - start
-  #     settings = <<SETTINGS
-  #     {
-  #         "fileUris": ["https://sadevspoke001.blob.core.windows.net/postdeploystuff/winrm.ps1"]
-  #     }
-  # SETTINGS
-  #   protected_settings = <<PROTECTED_SETTINGS
-  #     {
-  #       "commandToExecute": "powershell -ExecutionPolicy Unrestricted -NoProfile -NonInteractive -File winrm.ps1",
-  #       #"storageAccountName": "mystorageaccountname",
-  #       #"storageAccountKey": "xxxxx"
-  #     }
-  #   PROTECTED_SETTINGS
-  # # # # # # # # example - 0 2 - end
-}
+#   # # # # # # # # example - 0 2 - start
+#   #     settings = <<SETTINGS
+#   #     {
+#   #         "fileUris": ["https://sadevspoke001.blob.core.windows.net/postdeploystuff/winrm.ps1"]
+#   #     }
+#   # SETTINGS
+#   #   protected_settings = <<PROTECTED_SETTINGS
+#   #     {
+#   #       "commandToExecute": "powershell -ExecutionPolicy Unrestricted -NoProfile -NonInteractive -File winrm.ps1",
+#   #       #"storageAccountName": "mystorageaccountname",
+#   #       #"storageAccountKey": "xxxxx"
+#   #     }
+#   #   PROTECTED_SETTINGS
+#   # # # # # # # # example - 0 2 - end
+# }
 
 #creates a data disk to be attached to the VM
 resource "azurerm_managed_disk" "data_disk" {
