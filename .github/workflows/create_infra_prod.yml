@@ -4,26 +4,25 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - dev 
- 
- 
+      - dev
+
 env:
-#  TF_VERSION: "1.6.0"  #  Terraform version
-  WORKING_DIR: "./composable-teamcenter-azure-iac/environments/prod_001"
+  #  TF_VERSION: "1.6.0"  #  Terraform version
+  WORKING_DIR: "./azure-iac" #"./teamcenter-azure-iac/environments/prod_001"
 
 permissions:
   id-token: write
   contents: read
 
 jobs:
-  workloads-deploy:         
-    name: "workloads Deployment"
+  01_core_infra-deploy:
+    name: "01_core_infra Deployment"
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{env.WORKING_DIR}}/workloads
+        working-directory: ${{env.WORKING_DIR}}/01_core_infra/env-dev
 
-    env:  # Define Azure credentials at the job level
+    env: # Define Azure credentials at the job level
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_PROD_SUBSCRIPTION_ID }}
@@ -32,36 +31,36 @@ jobs:
     steps:
       # Checkout repository
       - name: "Checkout Repository"
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
+        uses: actions/checkout@v5
 
-      - name: Verify Node.js installation
-        run: |
-          node -v
-          npm -v
+      # - name: Setup Node.js environment
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: '20'
+
+      # - name: Verify Node.js installation
+      #   run: |
+      #     node -v
+      #     npm -v
 
       # Setup Terraform
       - name: "Setup Terraform"
         uses: actions/hashicorp_setup-terraform@v3
-      
+
       - name: Set environment variable
         run: |
           echo "TF_VAR_AZURE_CLIENT_SECRET=${{ secrets.SERVICEPRINCIPALKEY }}"
-          
+
       - uses: actions/terraform-linters_setup-tflint@v4
 
       - name: Show version
         run: tflint --version
-  
+
       - name: Init TFLint
         run: tflint --init
         env:
           GITHUB_TOKEN: ${{ github.token }}
-  
+
       - name: Run TFLint
         run: tflint -f compact
 
@@ -69,30 +68,30 @@ jobs:
         uses: actions/aquasecurity_tfsec-action@v1.0.0
         with:
           args: --exclude=AZU020
-      
+
       #----------------------------------------------
       #      terraform code canonical format checker
       #----------------------------------------------
       #- name: terraform fmt
-        #uses: actions/dflook_terraform-fmt-check@v1
-          
+      #uses: actions/dflook_terraform-fmt-check@v1
+
       # Configure Azure Authentication (OIDC )
       - name: "Azure Login"
-        uses: actions/azure_login@v1
+        uses: actions/azure_login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID}}
           tenant-id: ${{ secrets.AZURE_TENANT_ID  }}
           subscription-id: ${{ secrets.HUB_SUB_ID }}
-      - name: 'Run az commands'
+      - name: "Run az commands"
         run: |
-            az account show
-            az group list
+          az account show
+          az group list
 
       #  Terraform Initialization
       - name: "Terraform Init"
         env:
           ARM_ACCESS_KEY: ${{ secrets.STORAGE_ACCESS_KEY }}
-        working-directory: ${{ env.WORKING_DIR }}/workloads
+        working-directory: ${{ env.WORKING_DIR }}/01_core_infra/env-dev
         #run: terraform init -backend-config=environment.tfvars
         run: |
           echo $env.WORKING_DIR
@@ -102,98 +101,95 @@ jobs:
       #- name: "Terraform Format"
       #  working-directory: ${{ env.WORKING_DIR }}
       #  run: terraform fmt -check
-
       #  Terraform Validation
       - name: "Terraform Validate"
-        working-directory: ${{ env.WORKING_DIR }}/workloads
+        working-directory: ${{ env.WORKING_DIR }}/01_core_infra/env-dev
         run: terraform validate
-
 
         #  Terraform Plan
       - name: "Terraform Plan"
-        working-directory: ${{ env.WORKING_DIR }}/workloads
-#run: terraform plan -var-file=terraform.tfvars
+        working-directory: ${{ env.WORKING_DIR }}/01_core_infra/env-dev
+        #run: terraform plan -var-file=terraform.tfvars
         #run: terraform plan -var-file=terraform.tfvars
         run: |
-         echo $env.WORKING_DIR/workloads
-         terraform plan -out=tfplan
+          echo $env.WORKING_DIR/workloads
+          terraform plan -out=tfplan
 
       #  Terraform Apply
       - name: "Terraform Apply"
-        working-directory: ${{ env.WORKING_DIR }}/workloads
+        working-directory: ${{ env.WORKING_DIR }}/01_core_infra/env-dev
         #run: terraform apply -auto-approve -var-file=terraform.tfvars
         run: |
-        
+
           terraform apply "tfplan"
           terraform output -json > terraform_output.json
-          
-  
-  deploy-sql:
-    name: "Deploy SQL Instances"
-    runs-on: ubuntu-latest
-    needs: workloads-deploy
-    defaults:
-      run:
-        working-directory: ${{env.WORKING_DIR}}/sqlmi
-    env:
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_PROD_SUBSCRIPTION_ID }}
-      ARM_ACCESS_KEY: ${{ secrets.STORAGE_ACCESS_KEY }}
-    steps:
-      - name: "Checkout Repository"
-        uses: actions/checkout@v4
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
+  # deploy-sql:
+  #   name: "Deploy SQL Instances"
+  #   runs-on: ubuntu-latest
+  #   needs: workloads-deploy
+  #   defaults:
+  #     run:
+  #       working-directory: ${{env.WORKING_DIR}}/sqlmi
+  #   env:
+  #     ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  #     ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  #     ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_PROD_SUBSCRIPTION_ID }}
+  #     ARM_ACCESS_KEY: ${{ secrets.STORAGE_ACCESS_KEY }}
+  #   steps:
+  #     - name: "Checkout Repository"
+  #       uses: actions/checkout@v4
 
-      - name: Verify Node.js installation
-        run: |
-          node -v
-          npm -v
+  #     # - name: Setup Node.js environment
+  #     #   uses: actions/setup-node@v3
+  #     #   with:
+  #     #     node-version: '20'
 
-      - name: "Setup Terraform"
-        uses: actions/hashicorp_setup-terraform@v3
+  #     # - name: Verify Node.js installation
+  #     #   run: |
+  #     #     node -v
+  #     #     npm -v
 
-      - name: Set environment variable
-        run: |
-          echo "TF_VAR_AZURE_CLIENT_SECRET=${{ secrets.SERVICEPRINCIPALKEY }}"
-          
-      - uses: actions/terraform-linters_setup-tflint@v4
+  #     - name: "Setup Terraform"
+  #       uses: actions/hashicorp_setup-terraform@v3
 
-      - name: Show version
-        run: tflint --version
-  
-      - name: Init TFLint
-        run: tflint --init
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-  
-      - name: Run TFLint
-        run: tflint -f compact
+  #     - name: Set environment variable
+  #       run: |
+  #         echo "TF_VAR_AZURE_CLIENT_SECRET=${{ secrets.SERVICEPRINCIPALKEY }}"
 
-      - name: tfsec
-        uses: actions/aquasecurity_tfsec-action@v1.0.0
-        with:
-          args: --exclude=AZU020
+  #     - uses: actions/terraform-linters_setup-tflint@v4
 
-      - name: "Azure Login"
-        uses: actions/azure_login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.HUB_SUB_ID }}
+  #     - name: Show version
+  #       run: tflint --version
 
-      - name: "Terraform Init"
-        working-directory: ${{ env.WORKING_DIR }}/sqlmi
-        run: terraform init
+  #     - name: Init TFLint
+  #       run: tflint --init
+  #       env:
+  #         GITHUB_TOKEN: ${{ github.token }}
 
-      - name: "Terraform Plan"
-        working-directory: ${{ env.WORKING_DIR }}/sqlmi
-        run: terraform plan -out=tfplan
+  #     - name: Run TFLint
+  #       run: tflint -f compact
 
-      - name: "Terraform Apply"
-        working-directory: ${{ env.WORKING_DIR }}/sqlmi
-        run: terraform apply "tfplan"
+  #     - name: tfsec
+  #       uses: actions/aquasecurity_tfsec-action@v1.0.0
+  #       with:
+  #         args: --exclude=AZU020
+
+  #     - name: "Azure Login"
+  #       uses: actions/azure_login@v1
+  #       with:
+  #         client-id: ${{ secrets.AZURE_CLIENT_ID }}
+  #         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+  #         subscription-id: ${{ secrets.HUB_SUB_ID }}
+
+  #     - name: "Terraform Init"
+  #       working-directory: ${{ env.WORKING_DIR }}/sqlmi
+  #       run: terraform init
+
+  #     - name: "Terraform Plan"
+  #       working-directory: ${{ env.WORKING_DIR }}/sqlmi
+  #       run: terraform plan -out=tfplan
+
+  #     - name: "Terraform Apply"
+  #       working-directory: ${{ env.WORKING_DIR }}/sqlmi
+  #       run: terraform apply "tfplan"
