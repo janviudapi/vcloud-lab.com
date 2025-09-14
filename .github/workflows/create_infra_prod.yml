@@ -45,13 +45,14 @@ jobs:
 
       # Setup Terraform
       - name: "Setup Terraform"
-        uses: actions/hashicorp_setup-terraform@v3
+        uses: hashicorp/setup-terraform@v3
+        
 
       - name: Set environment variable
         run: |
           echo "TF_VAR_AZURE_CLIENT_SECRET=${{ secrets.SERVICEPRINCIPALKEY }}"
 
-      - uses: actions/terraform-linters_setup-tflint@v4
+      - uses: terraform-linters/setup-tflint@v5
 
       - name: Show version
         run: tflint --version
@@ -65,9 +66,7 @@ jobs:
         run: tflint -f compact
 
       - name: tfsec
-        uses: actions/aquasecurity_tfsec-action@v1.0.0
-        with:
-          args: --exclude=AZU020
+        uses: aquasecurity/tfsec-action@v1.0.0
 
       #----------------------------------------------
       #      terraform code canonical format checker
@@ -77,7 +76,7 @@ jobs:
 
       # Configure Azure Authentication (OIDC )
       - name: "Azure Login"
-        uses: actions/azure_login@v2
+        uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID}}
           tenant-id: ${{ secrets.AZURE_TENANT_ID  }}
