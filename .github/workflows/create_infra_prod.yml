@@ -97,14 +97,16 @@ jobs:
         run: |
           echo $env.WORKING_DIR
           terraform plan -out=tfplan
+        #terraform plan -out=tfplan
 
       #  Terraform Apply
       - name: "Terraform Apply"
         working-directory: ${{ env.WORKING_DIR }}/1_core_infra/env-dev
         #run: terraform apply -auto-approve -var-file=terraform.tfvars
         run: |
-          terraform apply "tfplan" --auto-approve
-          terraform output -json > terraform_output.json
+          terraform apply --auto-approve
+        #terraform output -json > terraform_output.json
+        #terraform apply "tfplan"
 
   # deploy-sql:
   #   name: "Deploy SQL Instances"
