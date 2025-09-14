@@ -23,10 +23,10 @@ jobs:
         working-directory: ${{env.WORKING_DIR}}/1_core_infra/env-dev
 
     env: # Define Azure credentials at the job level
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_PROD_SUBSCRIPTION_ID }}
-      ARM_ACCESS_KEY: ${{ secrets.STORAGE_ACCESS_KEY }}
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      #ARM_ACCESS_KEY: ${{ secrets.STORAGE_ACCESS_KEY }}
 
     steps:
       # Checkout repository
@@ -53,9 +53,9 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         
 
-      - name: Set environment variable
-        run: |
-          echo "TF_VAR_AZURE_CLIENT_SECRET=${{ secrets.SERVICEPRINCIPALKEY }}"
+      # - name: Set environment variable
+      #   run: |
+      #     echo "TF_VAR_AZURE_CLIENT_SECRET=${{ secrets.SERVICEPRINCIPALKEY }}"
 
       - uses: terraform-linters/setup-tflint@v5
 
@@ -84,9 +84,9 @@ jobs:
       - name: "Azure Login"
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID}}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID  }}
-          subscription-id: ${{ secrets.HUB_SUB_ID }}
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          tenant-id: ${{ secrets.ARM_TENANT_ID }}
+          subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       - name: "Run az commands"
         run: |
           az account show
@@ -94,8 +94,8 @@ jobs:
 
       #  Terraform Initialization
       - name: "Terraform Init"
-        env:
-          ARM_ACCESS_KEY: ${{ secrets.STORAGE_ACCESS_KEY }}
+        # env:
+        #   ARM_ACCESS_KEY: ${{ secrets.STORAGE_ACCESS_KEY }}
         working-directory: ${{ env.WORKING_DIR }}/01_core_infra/env-dev
         #run: terraform init -backend-config=environment.tfvars
         run: |
@@ -117,7 +117,7 @@ jobs:
         #run: terraform plan -var-file=terraform.tfvars
         #run: terraform plan -var-file=terraform.tfvars
         run: |
-          echo $env.WORKING_DIR/workloads
+          echo $env.WORKING_DIR
           terraform plan -out=tfplan
 
       #  Terraform Apply
@@ -125,8 +125,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}/01_core_infra/env-dev
         #run: terraform apply -auto-approve -var-file=terraform.tfvars
         run: |
-
-          terraform apply "tfplan"
+          terraform apply "tfplan" --auto-approve
           terraform output -json > terraform_output.json
 
   # deploy-sql:
