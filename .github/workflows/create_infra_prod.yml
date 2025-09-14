@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  01_core_infra-deploy:
+  _01_core_infra_deploy:
     name: "01_core_infra Deployment"
     runs-on: ubuntu-latest
     defaults:
