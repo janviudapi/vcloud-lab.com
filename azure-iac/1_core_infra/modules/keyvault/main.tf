@@ -77,7 +77,7 @@ resource "azurerm_key_vault_access_policy" "default_vault_access_policy" {
     "Restore",
     "Purge"
   ]
-}
+} 
 
 # resource "azurerm_key_vault_access_policy" "vault_access_policy" {
 #   for_each = { for policy in var.access_policies : policy.object_id => policy }
