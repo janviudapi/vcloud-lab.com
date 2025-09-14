@@ -69,6 +69,7 @@ jobs:
 
       - name: Run TFLint
         run: tflint -f compact
+        
 
       - name: tfsec
         uses: aquasecurity/tfsec-action@v1.0.0
