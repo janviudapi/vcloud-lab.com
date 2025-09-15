@@ -242,52 +242,52 @@ application_gateway_info = [
       }
     ]
 
-    "nsg_rules" = [
-      {
-        name                       = "AllowAppgatewayInbound"
-        priority                   = 100
-        direction                  = "Inbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "*"
-        destination_port_range     = "65200-65535"
-        source_address_prefix      = "GatewayManager"
-        destination_address_prefix = "*"
-      },
-      {
-        name                       = "AllowAppgatewayOutbound"
-        priority                   = 100
-        direction                  = "Outbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "*"
-        destination_port_range     = "65200-65535"
-        source_address_prefix      = "*"
-        destination_address_prefix = "*"
-      },
-      {
-        name                       = "App-GW-Inbound-Https"
-        priority                   = 101
-        direction                  = "Inbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "*"
-        destination_port_range     = "443"
-        source_address_prefix      = "*"
-        destination_address_prefix = "*"
-      },
-      {
-        name                       = "App-GW-Inbound-Custom-Ports"
-        priority                   = 102
-        direction                  = "Inbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "*"
-        destination_port_ranges    = ["8089", "30066", "30077", "8090"]
-        source_address_prefix      = "*"
-        destination_address_prefix = "*"
-      }
-    ]
+    # "nsg_rules" = [
+    #   {
+    #     name                       = "AllowAppgatewayInbound"
+    #     priority                   = 100
+    #     direction                  = "Inbound"
+    #     access                     = "Allow"
+    #     protocol                   = "Tcp"
+    #     source_port_range          = "*"
+    #     destination_port_range     = "65200-65535"
+    #     source_address_prefix      = "GatewayManager"
+    #     destination_address_prefix = "*"
+    #   },
+    #   {
+    #     name                       = "AllowAppgatewayOutbound"
+    #     priority                   = 100
+    #     direction                  = "Outbound"
+    #     access                     = "Allow"
+    #     protocol                   = "Tcp"
+    #     source_port_range          = "*"
+    #     destination_port_range     = "65200-65535"
+    #     source_address_prefix      = "*"
+    #     destination_address_prefix = "*"
+    #   },
+    #   {
+    #     name                       = "App-GW-Inbound-Https"
+    #     priority                   = 101
+    #     direction                  = "Inbound"
+    #     access                     = "Allow"
+    #     protocol                   = "Tcp"
+    #     source_port_range          = "*"
+    #     destination_port_range     = "443"
+    #     source_address_prefix      = "*"
+    #     destination_address_prefix = "*"
+    #   },
+    #   {
+    #     name                       = "App-GW-Inbound-Custom-Ports"
+    #     priority                   = 102
+    #     direction                  = "Inbound"
+    #     access                     = "Allow"
+    #     protocol                   = "Tcp"
+    #     source_port_range          = "*"
+    #     destination_port_ranges    = ["8089", "30066", "30077", "8090"]
+    #     source_address_prefix      = "*"
+    #     destination_address_prefix = "*"
+    #   }
+    # ]
 
     route = [
       { name = "onprem1", address_prefix = "10.124.0.0/16" },

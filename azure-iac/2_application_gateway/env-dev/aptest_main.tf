@@ -18,7 +18,7 @@ module "application_gateway" {
   request_routing_rule           = each.value.request_routing_rule
   probe                          = each.value.probe
   url_path_map                   = each.value.url_path_map
-  nsg_rules                      = each.value.nsg_rules
+  # nsg_rules                      = each.value.nsg_rules
   key_vault_info                 = each.value.key_vault_info
   certificate_name               = each.value.certificate_name
   encrypted_certificate_password = base64decode(each.value.encrypted_certificate_password)
