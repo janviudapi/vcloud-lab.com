@@ -4,7 +4,8 @@ resource "azurerm_key_vault" "vault" {
   resource_group_name = var.resource_group_name
   tenant_id           = data.azurerm_client_config.current.tenant_id
   sku_name            = var.sku_kv
-  # enable_rbac_authorization       = var.enable_rbac_authorization
+  rbac_authorization_enabled = true
+  #enable_rbac_authorization       = var.enable_rbac_authorization
   # enabled_for_deployment          = var.enabled_for_deployment
   # enabled_for_template_deployment = var.enabled_for_template_deployment
   # enabled_for_disk_encryption     = var.enabled_for_disk_encryption
@@ -19,66 +20,148 @@ resource "azurerm_key_vault" "vault" {
     virtual_network_subnet_ids = var.network_acls.virtual_network_subnet_ids
   }
 
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
+
+    key_permissions = [
+      "Backup",
+      "Create",
+      "Decrypt",
+      "Delete",
+      "Encrypt",
+      "Get",
+      "Import",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Sign",
+      "UnwrapKey",
+      "Update",
+      "Verify",
+      "WrapKey",
+      "Release",
+      "Rotate",
+      "GetRotationPolicy",
+      "SetRotationPolicy"
+    ]
+
+    secret_permissions = [
+      "Backup",
+      "Delete",
+      "Get",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Set"
+    ]
+
+    storage_permissions = [
+      "Backup",
+      "Delete",
+      "DeleteSAS",
+      "Get",
+      "GetSAS",
+      "List",
+      "ListSAS",
+      "Purge",
+      "Recover",
+      "RegenerateKey",
+      "Restore",
+      "Set",
+      "SetSAS",
+      "Update"
+    ]
+
+    certificate_permissions = [
+      "Backup",
+      "Create",
+      "Delete",
+      "DeleteIssuers",
+      "Get",
+      "GetIssuers",
+      "Import",
+      "List",
+      "ListIssuers",
+      "ManageContacts",
+      "ManageIssuers",
+      "Purge",
+      "Recover",
+      "Restore",
+      "SetIssuers",
+      "Update"
+    ]
+  }
+
   lifecycle {
     ignore_changes = [network_acls]
   }
 }
 
-resource "azurerm_key_vault_access_policy" "default_vault_access_policy" {
+resource "azurerm_role_assignment" "kv_role_assignment" {
   depends_on = [ azurerm_key_vault.vault ]
-  key_vault_id = azurerm_key_vault.vault.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azurerm_client_config.current.object_id
-  #application_id          = each.value.application_id
-  certificate_permissions = [
-    "Get",
-    "List",
-    "Create",
-    "Update",
-    "Import",
-    "Delete",
-    "Recover",
-    "Backup",
-    "Restore",
-    "Recover",
-    "Purge"
-  ]
-  key_permissions = [
-    "Get",
-    "List",
-    "Create",
-    "Update",
-    "Delete",
-    "Recover",
-    "Backup",
-    "Restore",
-    "GetRotationPolicy",
-    "SetRotationPolicy",
-    "Rotate",
-    "Purge",
-    "Sign",
-    "Verify",
-    "WrapKey",
-    "UnwrapKey",
-    "Encrypt",
-    "Decrypt"
-  ]
-  secret_permissions = [
-    "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
-  ]
-  storage_permissions = [
-    "Get",
-    "List",
-    "Delete",
-    "Set",
-    "Update",
-    "RegenerateKey",
-    "Recover",
-    "Backup",
-    "Restore",
-    "Purge"
-  ]
-} 
+  scope                = azurerm_key_vault.vault.id
+  role_definition_name = "Key Vault Administrator"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
+# resource "azurerm_key_vault_access_policy" "default_vault_access_policy" {
+#   depends_on = [ azurerm_key_vault.vault ]
+#   key_vault_id = azurerm_key_vault.vault.id
+#   tenant_id    = data.azurerm_client_config.current.tenant_id
+#   object_id    = data.azurerm_client_config.current.object_id
+#   #application_id          = each.value.application_id
+#   certificate_permissions = [
+#     "Get",
+#     "List",
+#     "Create",
+#     "Update",
+#     "Import",
+#     "Delete",
+#     "Recover",
+#     "Backup",
+#     "Restore",
+#     "Recover",
+#     "Purge"
+#   ]
+#   key_permissions = [
+#     "Get",
+#     "List",
+#     "Create",
+#     "Update",
+#     "Delete",
+#     "Recover",
+#     "Backup",
+#     "Restore",
+#     "GetRotationPolicy",
+#     "SetRotationPolicy",
+#     "Rotate",
+#     "Purge",
+#     "Sign",
+#     "Verify",
+#     "WrapKey",
+#     "UnwrapKey",
+#     "Encrypt",
+#     "Decrypt"
+#   ]
+#   secret_permissions = [
+#     "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
+#   ]
+#   storage_permissions = [
+#     "Get",
+#     "List",
+#     "Delete",
+#     "Set",
+#     "Update",
+#     "RegenerateKey",
+#     "Recover",
+#     "Backup",
+#     "Restore",
+#     "Purge"
+#   ]
+# } 
 
 # resource "azurerm_key_vault_access_policy" "vault_access_policy" {
 #   for_each = { for policy in var.access_policies : policy.object_id => policy }
@@ -125,11 +208,11 @@ resource "random_password" "vm_password" {
   min_upper   = 1
   min_lower   = 1
   min_numeric = 1
+  depends_on      = [azurerm_key_vault.vault, azurerm_role_assignment.kv_role_assignment]
 }
 
-
 resource "azurerm_key_vault_secret" "vm_username" {
-  depends_on      = [azurerm_key_vault.vault, azurerm_key_vault_access_policy.default_vault_access_policy] #, azurerm_role_assignment.vault_role_assignment
+  depends_on      = [azurerm_key_vault.vault, azurerm_role_assignment.kv_role_assignment, random_password.vm_password] #, azurerm_role_assignment.vault_role_assignment
   name            = var.key_vault_admin_username_secret_name
   value           = "vmadmin"
   key_vault_id    = azurerm_key_vault.vault.id
@@ -141,7 +224,7 @@ resource "azurerm_key_vault_secret" "vm_username" {
 }
 
 resource "azurerm_key_vault_secret" "vm_password" {
-  depends_on = [azurerm_key_vault.vault, azurerm_key_vault_access_policy.default_vault_access_policy] #, azurerm_role_assignment.vault_role_assignment
+  depends_on = [azurerm_key_vault.vault, azurerm_role_assignment.kv_role_assignment,azurerm_key_vault_secret.vm_username ] #, azurerm_role_assignment.vault_role_assignment
   name       = var.key_vault_admin_password_secret_name
   value      = random_password.vm_password.result
   #value           = "VmAdm!n@1234"
