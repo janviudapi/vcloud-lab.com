@@ -42,7 +42,7 @@ module "vnet_peering" {
   virtual_network_name      = each.value.virtual_network_name
   remote_virtual_network_id = module.virtual_network[each.value.remote_virtual_network_id].virtualnetworkinfo.id
 
-  depends_on = [module.virtual_network]
+  depends_on = [module.virtual_network, module.subnet]
 }
 
 module "upload_to_storage_account" {
