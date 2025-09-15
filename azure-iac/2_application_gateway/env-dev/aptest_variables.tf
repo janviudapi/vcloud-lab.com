@@ -121,28 +121,28 @@ variable "application_gateway_info" {
   }))
 }
 
-variable "keyvault_info" {
-  type = object({
-    name                = string
-    resource_group_name = string
-    location            = string
-    sku_kv              = string
-    #access_policies                      = var.access_policies
-    #role_assignments                     = var.role_assignments
-    network_acls = object({
-      bypass                     = optional(string, "None")
-      default_action             = optional(string, "Deny")
-      ip_rules                   = optional(list(string), [])
-      virtual_network_subnet_ids = optional(list(string), [])
-    })
-    runner_ip                            = bool
-    public_network_access_enabled        = bool
-    purge_protection_enabled             = bool
-    key_vault_admin_username_secret_name = string
-    key_vault_admin_password_secret_name = string
-    soft_delete_retention_days           = number
-    # log_analytics_workspace_id = var.log_analytics_workspace_id
-    # log_analytics_workspace_enable_logs = var.log_analytics_workspace_enable_logs
-    # log_analytics_storage_account_id = var.log_analytics_storage_account_id
-  })
-}
+# variable "keyvault_info" {
+#   type = object({
+#     name                = string
+#     resource_group_name = string
+#     location            = string
+#     sku_kv              = string
+#     #access_policies                      = var.access_policies
+#     #role_assignments                     = var.role_assignments
+#     network_acls = object({
+#       bypass                     = optional(string, "None")
+#       default_action             = optional(string, "Deny")
+#       ip_rules                   = optional(list(string), [])
+#       virtual_network_subnet_ids = optional(list(string), [])
+#     })
+#     runner_ip                            = bool
+#     public_network_access_enabled        = bool
+#     purge_protection_enabled             = bool
+#     key_vault_admin_username_secret_name = string
+#     key_vault_admin_password_secret_name = string
+#     soft_delete_retention_days           = number
+#     # log_analytics_workspace_id = var.log_analytics_workspace_id
+#     # log_analytics_workspace_enable_logs = var.log_analytics_workspace_enable_logs
+#     # log_analytics_storage_account_id = var.log_analytics_storage_account_id
+#   })
+# }

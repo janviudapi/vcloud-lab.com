@@ -315,19 +315,19 @@ application_gateway_info = [
   }
 ]
 
-keyvault_info = {
-  name                = "kv-dev-spoke-001"
-  resource_group_name = "rg-dev-spoke-001"
-  location            = "East US"
-  sku_kv              = "standard"
-  network_acls = {
-    bypass         = "AzureServices"
-    default_action = "Allow"
-  }
-  public_network_access_enabled        = true
-  purge_protection_enabled             = false
-  key_vault_admin_username_secret_name = "vm-admin-username"
-  key_vault_admin_password_secret_name = "vm-admin-password"
-  soft_delete_retention_days           = 7
-  runner_ip                            = false
-}
+# keyvault_info = {
+#   name                = "kv-dev-spoke-001"
+#   resource_group_name = "rg-dev-spoke-001"
+#   location            = "East US"
+#   sku_kv              = "standard"
+#   network_acls = {
+#     bypass         = "AzureServices"
+#     default_action = "Allow"
+#   }
+#   public_network_access_enabled        = true
+#   purge_protection_enabled             = false
+#   key_vault_admin_username_secret_name = "vm-admin-username"
+#   key_vault_admin_password_secret_name = "vm-admin-password"
+#   soft_delete_retention_days           = 7
+#   runner_ip                            = false
+# }
