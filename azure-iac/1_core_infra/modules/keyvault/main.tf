@@ -24,61 +24,61 @@ resource "azurerm_key_vault" "vault" {
   }
 }
 
-# resource "azurerm_key_vault_access_policy" "default_vault_access_policy" {
-#   depends_on = [ azurerm_key_vault.vault ]
-#   key_vault_id = azurerm_key_vault.vault.id
-#   tenant_id    = data.azurerm_client_config.current.tenant_id
-#   object_id    = data.azurerm_client_config.current.object_id
-#   #application_id          = each.value.application_id
-#   certificate_permissions = [
-#     "Get",
-#     "List",
-#     "Create",
-#     "Update",
-#     "Import",
-#     "Delete",
-#     "Recover",
-#     "Backup",
-#     "Restore",
-#     "Recover",
-#     "Purge"
-#   ]
-#   key_permissions = [
-#     "Get",
-#     "List",
-#     "Create",
-#     "Update",
-#     "Delete",
-#     "Recover",
-#     "Backup",
-#     "Restore",
-#     "GetRotationPolicy",
-#     "SetRotationPolicy",
-#     "Rotate",
-#     "Purge",
-#     "Sign",
-#     "Verify",
-#     "WrapKey",
-#     "UnwrapKey",
-#     "Encrypt",
-#     "Decrypt"
-#   ]
-#   secret_permissions = [
-#     "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
-#   ]
-#   storage_permissions = [
-#     "Get",
-#     "List",
-#     "Delete",
-#     "Set",
-#     "Update",
-#     "RegenerateKey",
-#     "Recover",
-#     "Backup",
-#     "Restore",
-#     "Purge"
-#   ]
-# } 
+resource "azurerm_key_vault_access_policy" "default_vault_access_policy" {
+  depends_on = [ azurerm_key_vault.vault ]
+  key_vault_id = azurerm_key_vault.vault.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
+  #application_id          = each.value.application_id
+  certificate_permissions = [
+    "Get",
+    "List",
+    "Create",
+    "Update",
+    "Import",
+    "Delete",
+    "Recover",
+    "Backup",
+    "Restore",
+    "Recover",
+    "Purge"
+  ]
+  key_permissions = [
+    "Get",
+    "List",
+    "Create",
+    "Update",
+    "Delete",
+    "Recover",
+    "Backup",
+    "Restore",
+    "GetRotationPolicy",
+    "SetRotationPolicy",
+    "Rotate",
+    "Purge",
+    "Sign",
+    "Verify",
+    "WrapKey",
+    "UnwrapKey",
+    "Encrypt",
+    "Decrypt"
+  ]
+  secret_permissions = [
+    "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
+  ]
+  storage_permissions = [
+    "Get",
+    "List",
+    "Delete",
+    "Set",
+    "Update",
+    "RegenerateKey",
+    "Recover",
+    "Backup",
+    "Restore",
+    "Purge"
+  ]
+} 
 
 # resource "azurerm_key_vault_access_policy" "vault_access_policy" {
 #   for_each = { for policy in var.access_policies : policy.object_id => policy }
@@ -129,7 +129,7 @@ resource "random_password" "vm_password" {
 
 
 resource "azurerm_key_vault_secret" "vm_username" {
-  # depends_on      = [azurerm_key_vault_access_policy.default_vault_access_policy] #, azurerm_role_assignment.vault_role_assignment
+  depends_on      = [azurerm_key_vault.vault, azurerm_key_vault_access_policy.default_vault_access_policy] #, azurerm_role_assignment.vault_role_assignment
   name            = var.key_vault_admin_username_secret_name
   value           = "vmadmin"
   key_vault_id    = azurerm_key_vault.vault.id
@@ -141,7 +141,7 @@ resource "azurerm_key_vault_secret" "vm_username" {
 }
 
 resource "azurerm_key_vault_secret" "vm_password" {
-  # depends_on = [azurerm_key_vault_access_policy.default_vault_access_policy] #, azurerm_role_assignment.vault_role_assignment
+  depends_on = [azurerm_key_vault.vault, azurerm_key_vault_access_policy.default_vault_access_policy] #, azurerm_role_assignment.vault_role_assignment
   name       = var.key_vault_admin_password_secret_name
   value      = random_password.vm_password.result
   #value           = "VmAdm!n@1234"

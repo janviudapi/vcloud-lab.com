@@ -29,7 +29,7 @@ resource "azurerm_windows_virtual_machine" "windowsvirtualmachine" {
   admin_password             = data.azurerm_key_vault_secret.keyvaultsecretinfo.value #var.admin_password #"Computer@123"
   network_interface_ids      = [azurerm_network_interface.networkinterace.id]
   zone                       = var.zone
-  enable_automatic_updates   = true
+  automatic_updates_enabled  = true
   patch_mode                 = "AutomaticByOS"
   encryption_at_host_enabled = false
 
